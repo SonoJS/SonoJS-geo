@@ -1,6 +1,6 @@
 {
   "name": "@sonojs/geo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Countries, states, and cities for JavaScript — lazy-loaded geographic data with TypeScript types",
   "license": "MIT",
   "author": "SonoJS",
