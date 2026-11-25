@@ -1,0 +1,20 @@
+export declare const configureGeo: (config: import("./types.js").GeoConfig) => void;
+export declare const getGeoConfig: typeof import("./core/config.js").getGeoConfig;
+export declare const clearGeoCache: typeof import("./core/cache.js").clearGeoCache;
+export declare const preloadCountries: () => Promise<void>;
+export declare const getCountries: () => Promise<import("./types.js").Country[]>;
+export declare const getCountryById: (id: number) => Promise<import("./types.js").Country | undefined>;
+export declare const getCountryByIso2: (code: string) => Promise<import("./types.js").Country | undefined>;
+export declare const getCountryByIso3: (code: string) => Promise<import("./types.js").Country | undefined>;
+export declare const searchCountries: (query: string, options?: import("./types.js").SearchOptions) => Promise<import("./types.js").Country[]>;
+export declare const getStatesByCountry: (countryIdOrIso: number | string) => Promise<import("./types.js").State[]>;
+export declare const getStateById: (id: number) => Promise<import("./types.js").State | undefined>;
+export declare const getStateByIso: (code: string, options?: import("./types.js").StateIsoOptions) => Promise<import("./types.js").State | undefined>;
+export declare const searchStates: (query: string, options: import("./types.js").StateSearchOptions) => Promise<import("./types.js").State[]>;
+export declare const getCitiesByCountry: (countryIdOrIso: number | string) => Promise<import("./types.js").City[]>;
+export declare const getCitiesByState: (stateId: number) => Promise<import("./types.js").City[]>;
+export declare const getCityById: (id: number) => Promise<import("./types.js").City | undefined>;
+export declare const searchCities: (query: string, options?: import("./types.js").CitySearchOptions) => Promise<import("./types.js").City[]>;
+export * from "./types.js";
+export { GeoLoadError } from "./core/errors.js";
+//# sourceMappingURL=node.d.ts.map

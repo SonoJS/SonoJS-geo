@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SonoJS Geo</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <script>
+      ;(() => {
+        const KEY = "sonojs-geo-theme";
+        const pref = localStorage.getItem(KEY) || "system";
+        const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme =
+          pref === "light" || pref === "dark" ? pref : dark ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themePref = pref;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
+    <style>
+      :root,
+      html[data-theme="light"] {
+        color-scheme: light;
+        --bg: #f4f4f5;
+        --surface: #ffffff;
+        --border: color-mix(in oklab, #71717a 28%, transparent);
+        --text: #18181b;
+        --muted: #71717a;
+        --accent: #2563eb;
+        --radius: 12px;
+        --sans: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        --code-bg: #1e1e1e;
+        --code-fg: #d4d4d4;
+        --code-header: #252526;
+        --tok-keyword: #569cd6;
+        --tok-fn: #dcdcaa;
+        --tok-str: #ce9178;
+        --tok-punc: #808080;
+      }
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #09090b;
+        --surface: #18181b;
+        --text: #fafafa;
+        --muted: #a1a1aa;
+        --border: color-mix(in oklab, #a1a1aa 28%, transparent);
+        --accent: #396ef0;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 24px 16px 48px;
+        font-family: var(--sans);
+        background: var(--bg);
+        color: var(--text);
+      }
+      .wrap { max-width: 520px; margin: 0 auto; }
+      .page-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 16px;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .page-head-aside {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      .sono-link {
+        color: var(--muted);
+        font-size: 0.875rem;
+        text-decoration: none;
+      }
+      .sono-link:hover {
+        color: var(--text);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .icon-link {
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+      .icon-link:hover {
+        background: color-mix(in oklab, var(--muted) 10%, transparent);
+      }
+      .icon-link svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+      }
+      .theme-toggle {
+        position: relative;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text);
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .theme-toggle svg {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        width: 18px;
+        height: 18px;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+      .theme-toggle .icon-sun {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+      .theme-toggle .icon-moon {
+        opacity: 0;
+        transform: scale(0) rotate(90deg);
+      }
+      html[data-theme="dark"] .theme-toggle .icon-sun {
+        opacity: 0;
+        transform: scale(0) rotate(-90deg);
+      }
+      html[data-theme="dark"] .theme-toggle .icon-moon {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.5rem;
+        letter-spacing: -0.03em;
+      }
+      .lede {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9375rem;
+        line-height: 1.45;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      .row { margin-bottom: 14px; }
+      .row:last-of-type { margin-bottom: 0; }
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.8125rem;
+        color: var(--muted);
+      }
+      select {
+        width: 100%;
+        height: 40px;
+        padding: 0 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font: inherit;
+        background: var(--surface);
+        color: var(--text);
+      }
+      select:disabled { opacity: 0.6; }
+      .out {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        min-height: 3em;
+      }
+      .out strong { font-weight: 600; }
+      section h2 {
+        margin: 0 0 10px;
+        font-size: 0.9375rem;
+        font-weight: 600;
+      }
+      .code-block {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #2d2d2d;
+        background: var(--code-bg);
+      }
+      .code-head {
+        padding: 6px 12px;
+        background: #252526;
+        color: #cccccc;
+        font-size: 0.75rem;
+      }
+      .code-body {
+        margin: 0;
+        padding: 12px;
+        font-family: var(--mono);
+        font-size: 0.8125rem;
+        line-height: 1.65;
+        color: var(--code-fg);
+        white-space: pre-wrap;
+      }
+      .code-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .tok-kw { color: var(--tok-keyword); }
+      .tok-fn { color: var(--tok-fn); }
+      .tok-str { color: var(--tok-str); }
+      .tok-punc { color: var(--tok-punc); }
+      footer {
+        margin-top: 8px;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+      details summary { cursor: pointer; }
+      details a { color: var(--accent); }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="page-head">
+        <div>
+          <h1>SonoJS Geo</h1>
+          <p class="lede">Country and city picker using the package API.</p>
+        </div>
+        <div class="page-head-aside">
+          <a class="sono-link" href="https://sonojs.com">SonoJS</a>
+          <a
+            class="icon-link"
+            href="https://github.com/SonoJS/SonoJS-geo"
+            aria-label="GitHub repository"
+          >
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+              />
+            </svg>
+          </a>
+          <a
+            class="icon-link"
+            href="https://www.npmjs.com/package/@sonojs/geo"
+            aria-label="npm package"
+          >
+          <svg viewBox="0 0 2500 2500" xmlns="http://www.w3.org/2000/svg" width="2500" height="2500"><path fill="#c00" d="M0 0h2500v2500H0z"/><path fill="#fff" d="M1241.5 268.5h-973v1962.9h972.9V763.5h495v1467.9h495V268.5z"/></svg>
+          </a>
+          <button type="button" class="theme-toggle" id="theme-toggle">
+            <span class="sr-only">Toggle theme</span>
+            <svg
+              class="icon-sun"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+            <svg
+              class="icon-moon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M21 14.5A8.5 8.5 0 0 1 9.5 3a7 7 0 1 0 11.5 11.5z"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="card">
+        <form id="form" onsubmit="return false">
+          <div class="row">
+            <label for="country">Country</label>
+            <select id="country" required></select>
+          </div>
+          <div class="row">
+            <label for="city">City</label>
+            <select id="city" disabled required></select>
+          </div>
+        </form>
+        <div class="out" id="out" aria-live="polite">Select a country and city.</div>
+      </div>
+
+      <section class="card">
+        <h2>Install &amp; usage</h2>
+        <div class="code-stack">
+          <div class="code-block">
+            <div class="code-head">terminal</div>
+            <pre class="code-body"><span class="tok-fn">npm install</span> <span class="tok-str">@sonojs/geo</span></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head">JavaScript</div>
+            <pre class="code-body"><span class="tok-kw">import</span> <span class="tok-punc">{</span> <span class="tok-fn">getCountryByIso2</span><span class="tok-punc">,</span> <span class="tok-fn">getCitiesByCountry</span> <span class="tok-punc">}</span> <span class="tok-kw">from</span> <span class="tok-str">'@sonojs/geo'</span><span class="tok-punc">;</span>
+
+<span class="tok-kw">const</span> country <span class="tok-punc">=</span> <span class="tok-kw">await</span> <span class="tok-fn">getCountryByIso2</span><span class="tok-punc">(</span><span class="tok-str">'JP'</span><span class="tok-punc">);</span>
+<span class="tok-kw">const</span> cities <span class="tok-punc">=</span> <span class="tok-kw">await</span> <span class="tok-fn">getCitiesByCountry</span><span class="tok-punc">(</span><span class="tok-str">'JP'</span><span class="tok-punc">);</span></pre>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <details>
+          <summary>Data &amp; license</summary>
+          <p style="margin: 8px 0 0">
+            <a href="https://github.com/dr5hn/countries-states-cities-database">dr5hn database</a>,
+            <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL</a>. Code: MIT.
+          </p>
+        </details>
+      </footer>
+    </div>
+    <script type="module" src="./demo.mjs"></script>
+    <script type="module">
+      const THEME_KEY = "sonojs-geo-theme";
+      const themeToggle = document.getElementById("theme-toggle");
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+      function resolveTheme(pref) {
+        if (pref === "light" || pref === "dark") return pref;
+        return systemDark.matches ? "dark" : "light";
+      }
+
+      function applyTheme(pref) {
+        const next =
+          pref === "light" || pref === "dark" || pref === "system"
+            ? pref
+            : "system";
+        const theme = resolveTheme(next);
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themePref = next;
+        document.documentElement.style.colorScheme = theme;
+        localStorage.setItem(THEME_KEY, next);
+      }
+
+      applyTheme(localStorage.getItem(THEME_KEY) || "system");
+      themeToggle.addEventListener("click", () => {
+        const current = resolveTheme(
+          localStorage.getItem(THEME_KEY) || "system"
+        );
+        applyTheme(current === "dark" ? "light" : "dark");
+      });
+      systemDark.addEventListener("change", () => {
+        if ((localStorage.getItem(THEME_KEY) || "system") === "system") {
+          applyTheme("system");
+        }
+      });
+    </script>
+  </body>
+</html>

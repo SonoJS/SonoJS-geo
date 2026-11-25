@@ -1,0 +1,8 @@
+{
+  "name": "consumer-node",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@sonojs/geo": "file:../../.."
+  }
+}

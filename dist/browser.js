@@ -1,0 +1,26 @@
+import { createGeoApi } from "./core/api.js";
+import { setDefaultDataBaseUrl } from "./core/config.js";
+import { createBrowserLoadJson, defaultBrowserDataBaseUrl, } from "./loaders/browser.js";
+setDefaultDataBaseUrl(defaultBrowserDataBaseUrl());
+const loadJson = createBrowserLoadJson();
+const api = createGeoApi(loadJson);
+export const configureGeo = api.configureGeo;
+export const getGeoConfig = api.getGeoConfig;
+export const clearGeoCache = api.clearGeoCache;
+export const preloadCountries = api.preloadCountries;
+export const getCountries = api.getCountries;
+export const getCountryById = api.getCountryById;
+export const getCountryByIso2 = api.getCountryByIso2;
+export const getCountryByIso3 = api.getCountryByIso3;
+export const searchCountries = api.searchCountries;
+export const getStatesByCountry = api.getStatesByCountry;
+export const getStateById = api.getStateById;
+export const getStateByIso = api.getStateByIso;
+export const searchStates = api.searchStates;
+export const getCitiesByCountry = api.getCitiesByCountry;
+export const getCitiesByState = api.getCitiesByState;
+export const getCityById = api.getCityById;
+export const searchCities = api.searchCities;
+export * from "./types.js";
+export { GeoLoadError } from "./core/errors.js";
+//# sourceMappingURL=browser.js.map

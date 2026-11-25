@@ -1,0 +1,14 @@
+{
+  "name": "consumer-vite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@sonojs/geo": "file:../../.."
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
