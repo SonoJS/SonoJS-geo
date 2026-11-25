@@ -302,14 +302,18 @@
         <form id="form" onsubmit="return false">
           <div class="row">
             <label for="country">Country</label>
-            <select id="country" required></select>
+            <select id="country"></select>
+          </div>
+          <div class="row">
+            <label for="state">State / region</label>
+            <select id="state" disabled></select>
           </div>
           <div class="row">
             <label for="city">City</label>
-            <select id="city" disabled required></select>
+            <select id="city" disabled></select>
           </div>
         </form>
-        <div class="out" id="out" aria-live="polite">Select a country and city.</div>
+        <div class="out" id="out" aria-live="polite">Choose a country.</div>
       </div>
 
       <section class="card">
